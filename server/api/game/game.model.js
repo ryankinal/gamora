@@ -5,23 +5,23 @@ var mongoose = require('mongoose'),
     ObjectId = Schema.Types.ObjectId;
 
 var GameSchema = new Schema({
-  title: {type: String, required: true},
-  publisher: String,
-  aliases: [String],
+  title: {type: String, required: true, trim: true, index: { unique: true }},
+  publisher: { type: String, trim: true },
+  aliases: [{type: String, trim: true}],
   description: [{
     text: String,
-    updated: Number, // UTC time
+    updated: { type: Date, default: Date.now },
     user: ObjectId
   }],
-  rating: Number,
+  rating: { type: Number, min: 1, max: 5 },
   tags: [{
     tag: ObjectId,
-    added: Number, // UTC time
+    added: { type: Date, default: Date.now },
     user: ObjectId
   }],
   updated: [{
     by: ObjectId,
-    at: Number, // UTC time
+    at: { type: Date, default: Date.now },
     fields: [String]
   }],
   active: Boolean
