@@ -2,6 +2,7 @@
 
 var express = require('express');
 var controller = require('./game.controller');
+var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 

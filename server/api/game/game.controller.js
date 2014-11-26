@@ -2,10 +2,12 @@
 
 var _ = require('lodash');
 var Game = require('./game.model');
+var filterable = require('./game.filterable');
+var filterHelper = require('../../components/filterHelper');
 
 // Get list of games
 exports.index = function(req, res) {
-  Game.find(function (err, games) {
+  Game.find(filterHelper.mongoQuery(req.query, filterable), filterHelper.paging(req.query), function (err, games) {
     if(err) { return handleError(res, err); }
     return res.json(200, games);
   });

@@ -1,7 +1,8 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    ObjectId = Schema.Types.ObjectId;
 
 var TagSchema = new Schema({
   name: String,
@@ -13,7 +14,7 @@ var TagSchema = new Schema({
   }],
   updated: [{
     by: ObjectId,
-    on: Number, // UTC time
+    at: Number, // UTC time
     fields: [String]
   }]
 });

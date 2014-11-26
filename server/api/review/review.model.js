@@ -1,7 +1,8 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    ObjectId = Schema.Types.ObjectId;
 
 var ReviewSchema = new Schema({
   title: String,
@@ -10,11 +11,11 @@ var ReviewSchema = new Schema({
   length: Number,
   completed: Number, // 0 = no, 1 = yes, -1 = not applicable
   description: String,
-  author: ObjectId
+  author: ObjectId,
   game: ObjectId,
   updated: [{
     by: ObjectId,
-    on: Number, // UTC time
+    at: Number, // UTC time
     fields: [String]
   }]
 });

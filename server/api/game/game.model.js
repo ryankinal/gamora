@@ -21,7 +21,7 @@ var GameSchema = new Schema({
   }],
   updated: [{
     by: ObjectId,
-    on: Number // UTC time
+    at: Number, // UTC time
     fields: [String]
   }],
   active: Boolean
