@@ -5,7 +5,7 @@ angular.module('gamoraApp')
     $stateProvider
       .state('admin', {
         url: '/admin',
-        templateUrl: 'app/admin/admin.html',
+        templateUrl: 'app/routes/admin/admin.html',
         controller: 'AdminCtrl'
       });
   });
