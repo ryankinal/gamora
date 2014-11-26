@@ -10,11 +10,7 @@ exports.index = function(req, res) {
   var query = filterHelper.mongoQuery(req.query, filterable),
     paging = filterHelper.paging(req.query);
 
-  console.log(query);
-  console.log(paging);
-
   Game.find(query).skip(paging.skip).limit(paging.limit).exec(function (err, games) {
-    console.log(err);
     if(err) { return handleError(res, err); }
     return res.json(200, games);
   });
@@ -31,14 +27,25 @@ exports.show = function(req, res) {
 
 // Creates a new game in the DB.
 exports.create = function(req, res) {
-  if (typeof req.body.description === 'string') {
-    req.body.description = [{
-      text: req.body.description
+  var body = _.clone(req.body);
+
+  if (typeof body.description === 'string') {
+    body.description = [{
+      text: req.body.description,
+      updated: Date.now(),
+      user: req.user._id
     }];
   }
 
-  Game.create(req.body, function(err, game) {
-    console.log(err);
+  body.updated = [{
+    by: req.user._id,
+    at: Date.now(),
+    fields: Object.keys(body)
+  }];
+
+  body.active = true;
+
+  Game.create(body, function(err, game) {
     if(err) { return handleError(res, err); }
     return res.json(201, game);
   });
