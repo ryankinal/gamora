@@ -7,7 +7,7 @@ var FlagSchema = new Schema({
   by: ObjectId,
   on: Number,
   item: ObjectId,
-  invalid: {type: Boolean, default: false}
+  valid: {type: Boolean, default: false}
 });
 
 module.exports = mongoose.model('Flag', FlagSchema);
