@@ -8,10 +8,15 @@ var authTypes = ['github', 'twitter', 'facebook', 'google'];
 var UserSchema = new Schema({
   name: String,
   email: { type: String, lowercase: true },
+  bio: String,
+  nickname: { type: String, index: { unique: true }},
+  avatar: String,
   role: {
     type: String,
     default: 'user'
   },
+  following: [ObjectId],
+  blocked: [ObjectId],
   hashedPassword: String,
   provider: String,
   salt: String,
@@ -40,8 +45,11 @@ UserSchema
   .virtual('profile')
   .get(function() {
     return {
-      'name': this.name,
-      'role': this.role
+      name: this.name,
+      bio: this.bio,
+      nickname: this.nickname,
+      avatar: this.avatar,
+      following: this.following
     };
   });
 
