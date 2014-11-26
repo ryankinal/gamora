@@ -4,9 +4,19 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var ReviewSchema = new Schema({
-  name: String,
-  info: String,
-  active: Boolean
+  title: String,
+  rating: Number,
+  difficulty: Number,
+  length: Number,
+  completed: Number, // 0 = no, 1 = yes, -1 = not applicable
+  description: String,
+  author: ObjectId
+  game: ObjectId,
+  updated: [{
+    by: ObjectId,
+    on: Number, // UTC time
+    fields: [String]
+  }]
 });
 
 module.exports = mongoose.model('Review', ReviewSchema);
