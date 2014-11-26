@@ -5,8 +5,17 @@ var mongoose = require('mongoose'),
 
 var TagSchema = new Schema({
   name: String,
-  info: String,
-  active: Boolean
+  canonical: ObjectId,
+  description: [{
+    text: String,
+    added: Number, // UTC time
+    author: ObjectId
+  }],
+  updated: [{
+    by: ObjectId,
+    on: Number, // UTC time
+    fields: [String]
+  }]
 });
 
 module.exports = mongoose.model('Tag', TagSchema);
