@@ -28,6 +28,7 @@ Represents a video game. Obviously.
 * aliases - other names by which the game is known
 * description
 * rating - periodically calculated from user reviews
+* difficulty - periodically calculated from user reviews
 * tags
 * updated - history of updates
 * active - whether it's included in results

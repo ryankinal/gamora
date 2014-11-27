@@ -14,6 +14,7 @@ var GameSchema = new Schema({
     user: ObjectId
   }],
   rating: { type: Number, min: 1, max: 5 },
+  difficulty: { type: Number, min: 1, max: 5 },
   tags: [{
     tag: ObjectId,
     added: { type: Date, default: Date.now },
