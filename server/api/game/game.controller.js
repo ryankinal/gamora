@@ -32,14 +32,20 @@ exports.create = function(req, res) {
   if (typeof body.description === 'string') {
     body.description = [{
       text: req.body.description,
-      updated: Date.now(),
       user: req.user._id
     }];
   }
 
+  if (typeof body.rating !== 'undefined') {
+    delete body.rating;
+  }
+
+  if (typeof body.difficulty !== 'undefined') {
+    delete body.difficulty;
+  }
+
   body.updated = [{
     by: req.user._id,
-    at: Date.now(),
     fields: Object.keys(body)
   }];
 
@@ -57,6 +63,18 @@ exports.update = function(req, res) {
   Game.findById(req.params.id, function (err, game) {
     if (err) { return handleError(res, err); }
     if(!game) { return res.send(404); }
+
+    var body = _.clone(req.body);
+
+    if (typeof body.description === 'string') {
+      game.description.push({
+        text: body.description,
+        by: req.user._id
+      });
+    }
+
+    delete body.description;
+
     var updated = _.merge(game, req.body);
     updated.save(function (err) {
       if (err) { return handleError(res, err); }
