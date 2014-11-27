@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Review = require('./review.model');
+var Game = require('../game/game.model');
 var filterable = require('./review.filterable');
 var filterHelper = require('../../components/filterHelper');
 
@@ -27,9 +28,30 @@ exports.show = function(req, res) {
 
 // Creates a new review in the DB.
 exports.create = function(req, res) {
-  Review.create(req.body, function(err, review) {
-    if(err) { return handleError(res, err); }
-    return res.json(201, review);
+  var body = _.clone(req.body);
+
+  if (!body.game) {
+    return res.send(400, { error: 'Review has no game set'});
+  }
+
+  Game.findById(body.game, function(err, game) {
+    if (err) { return handleError(res, err); }
+    if (!game) { return res.send(404, {error: 'Game ' + body.game + ' not found'}); }
+
+    if (typeof body.updated !== 'undefined') {
+      delete body.updated;
+    }
+
+    body.author = req.user._id;
+
+    body.updated = [{
+      by: req.user._id
+    }];
+
+    Review.create(body, function(err, review) {
+      if(err) { return handleError(res, err); }
+      return res.json(201, review);
+    });
   });
 };
 
