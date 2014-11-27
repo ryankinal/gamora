@@ -8,8 +8,13 @@ module.exports = {
       count = (query.count) ? parseInt(query.count) : 30;
 
     return {
+      page: page,
+      count: count,
       skip: (page - 1) * count,
-      limit: count
+      limit: count,
+      previous: (page > 1) ? page - 1 : false,
+      next: page + 1,
+      max: page * count
     };
   },
   mongoQuery: function(query, filterable) {
