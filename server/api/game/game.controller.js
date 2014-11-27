@@ -45,8 +45,7 @@ exports.create = function(req, res) {
   }
 
   body.updated = [{
-    by: req.user._id,
-    fields: Object.keys(body)
+    by: req.user._id
   }];
 
   body.active = true;
@@ -75,7 +74,15 @@ exports.update = function(req, res) {
 
     delete body.description;
 
-    var updated = _.merge(game, req.body);
+    if (typeof body.updates !== 'undefined') {
+      delete body.updates;
+    }
+
+    game.updated.push({
+      by: req.user._id
+    });
+
+    var updated = _.merge(game, body);
     updated.save(function (err) {
       if (err) { return handleError(res, err); }
       return res.json(200, game);
