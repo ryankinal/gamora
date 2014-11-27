@@ -26,6 +26,28 @@ exports.show = function(req, res) {
 
 // Creates a new tag in the DB.
 exports.create = function(req, res) {
+  var body = _.clone(req.body);
+
+  if (typeof body.canonical !== 'undefined') {
+    delete body.canonical;
+  }
+
+  if (typeof body.updated !== 'undefined') {
+    delete body.updated;
+  }
+
+  body.updated = [{
+    by: req.user._id,
+    fields: ['all']
+  }];
+
+  if (typeof body.description === 'string') {
+    body.description = [{
+      text: body.description,
+      author: req.user._id
+    }];
+  }
+
   Tag.create(req.body, function(err, tag) {
     if(err) { return handleError(res, err); }
     return res.json(201, tag);
