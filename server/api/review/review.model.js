@@ -15,8 +15,7 @@ var ReviewSchema = new Schema({
   game: ObjectId,
   updated: [{
     by: ObjectId,
-    at: Number, // UTC time
-    fields: [String]
+    at: { type: Date, default: Date.now }
   }]
 });
 
