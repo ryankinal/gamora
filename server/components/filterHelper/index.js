@@ -35,6 +35,8 @@ module.exports = {
           case 'string':
             if (cloned[field].charAt(0) === '*') {
               filters[field] = new RegExp(cloned[field].substring(1).replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i');
+            } else if (cloned[field].charAt(0) === '^') {
+              filters[field] = new RegExp('^' + cloned[field].substring(1).replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i')
             } else {
               filters[field] = query[field];
             }
