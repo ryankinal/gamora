@@ -2,12 +2,13 @@
 
 var _ = require('lodash');
 var Tag = require('./tag.model');
+var filterable = require('./tag.filterable');
 var filterHelper = require('../../components/filterHelper');
 
 // Get list of tags
 exports.index = function(req, res) {
   var paging = filterHelper.paging(req.query),
-    filters = filterHelper.mongoQuery(req.query);
+    filters = filterHelper.mongoQuery(req.query, filterable);
 
   Tag.find(filters).skip(paging.skip).limit(paging.limit).exec(function (err, tags) {
     if(err) { return handleError(res, err); }
