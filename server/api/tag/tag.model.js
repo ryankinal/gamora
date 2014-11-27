@@ -9,12 +9,12 @@ var TagSchema = new Schema({
   canonical: ObjectId,
   description: [{
     text: String,
-    added: Number, // UTC time
+    added: { type: Date, default: Date.now },
     author: ObjectId
   }],
   updated: [{
     by: ObjectId,
-    at: Number, // UTC time
+    at: { type: Date, default: Date.now },
     fields: [String]
   }]
 });
