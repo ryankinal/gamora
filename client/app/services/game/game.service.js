@@ -9,8 +9,12 @@ angular.module('gamoraApp')
         return http(endpoint, 'GET', filters);
       },
       getById: function(id) {
-        var url = endpoint + '/' + id;
-        return http(url, 'GET');
+        if (!id) {
+          return $q.reject({error: 'ID is required'});
+        } else {
+          var url = endpoint + '/' + id;
+          return http(url, 'GET');
+        }
       },
       save: function(game) {
         var url = endpoint,
