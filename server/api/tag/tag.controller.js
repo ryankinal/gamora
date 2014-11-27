@@ -4,15 +4,59 @@ var _ = require('lodash');
 var Tag = require('./tag.model');
 var filterable = require('./tag.filterable');
 var filterHelper = require('../../components/filterHelper');
+var apiResponse = require('../../components/apiResponse');
+var querystring = require('querystring');
+var endpoint = '/api/tags';
+
+var links = function(tag) {
+  var self = endpoint + '/' + tag._id,
+    canonical = endpoint + '/' + tag.canonical,
+    obj = {
+      self: self
+    };
+
+  if (tag.canonical) {
+    obj.canonical = canonical;
+  }
+
+  return obj;
+};
 
 // Get list of tags
 exports.index = function(req, res) {
   var paging = filterHelper.paging(req.query),
-    filters = filterHelper.mongoQuery(req.query, filterable);
+    query = filterHelper.mongoQuery(req.query, filterable),
+    path = req.originalUrl.split(/\?/)[0];
 
-  Tag.find(filters).skip(paging.skip).limit(paging.limit).exec(function (err, tags) {
+  Tag.find(query).skip(paging.skip).limit(paging.limit).exec(function (err, tags) {
     if(err) { return handleError(res, err); }
-    return res.json(200, tags);
+
+    Tag.count(query, function(err, count) {
+      var meta = {},
+        links = {
+          self: req.originalUrl
+        },
+        nextQuery,
+        prevQuery;
+
+      if (!err) {
+        meta.count = count;
+
+        if (count > paging.max) {
+          nextQuery = _.clone(req.query);
+          nextQuery.page = paging.next;
+          links.next = path + '?' + querystring.stringify(nextQuery);
+        }
+
+        if (paging.previous) {
+          prevQuery = _.clone(req.query);
+          prevQuery.page = paging.previous;
+          links.previous = path + '?' + querystring.stringify(prevQuery);
+        }
+      }
+
+      return res.json(200, apiResponse.collection(tags, links, meta));
+    });
   });
 };
 
@@ -21,7 +65,7 @@ exports.show = function(req, res) {
   Tag.findById(req.params.id, function (err, tag) {
     if(err) { return handleError(res, err); }
     if(!tag) { return res.send(404); }
-    return res.json(tag);
+    return res.json(apiResponse.single(tag, links(tag)));
   });
 };
 
@@ -49,7 +93,7 @@ exports.create = function(req, res) {
   Tag.create(body, function(err, tag) {
     console.log(err);
     if(err) { return handleError(res, err); }
-    return res.json(201, tag);
+    return res.json(201, apiResponse.single(tag, links(tag)));
   });
 };
 
@@ -82,7 +126,7 @@ exports.update = function(req, res) {
     var updated = _.merge(tag, body);
     updated.save(function (err) {
       if (err) { return handleError(res, err); }
-      return res.json(200, tag);
+      return res.json(200, apiResponse.single(tag, links(tag)));
     });
   });
 };
