@@ -61,11 +61,32 @@ exports.update = function(req, res) {
   Review.findById(req.params.id, function (err, review) {
     if (err) { return handleError(res, err); }
     if(!review) { return res.send(404); }
-    var updated = _.merge(review, req.body);
-    updated.save(function (err) {
-      if (err) { return handleError(res, err); }
-      return res.json(200, review);
-    });
+
+    var hasPermission = review.author.equals(req.user._id) || req.user.role === 'moderator' || req.user.rol === 'admin';
+
+    if (hasPermission) {
+      var body = _.clone(req.body);
+
+      if (typeof body.updated !== 'undefined') {
+        delete body.updated;
+      }
+
+      if (typeof body.game !== 'undefined') {
+        delete body.game;
+      }
+
+      review.updated.push({
+        by: req.user._id
+      });
+
+      var updated = _.merge(review, body);
+      updated.save(function (err) {
+        if (err) { return handleError(res, err); }
+        return res.json(200, review);
+      });
+    } else {
+      return res.send(401);
+    }
   });
 };
 
