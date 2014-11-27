@@ -2,10 +2,15 @@
 
 var _ = require('lodash');
 var Review = require('./review.model');
+var filterable = require('./review.filterable');
+var filterHelper = require('../../components/filterHelper');
 
 // Get list of reviews
 exports.index = function(req, res) {
-  Review.find(function (err, reviews) {
+  var paging = filterHelper.paging(req.query),
+    filters = filterHelper.mongoQuery(req.query, filterable);
+
+  Review.find(filters).skip(paging.skip).limit(paging.limit).exec(function (err, reviews) {
     if(err) { return handleError(res, err); }
     return res.json(200, reviews);
   });
