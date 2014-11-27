@@ -5,15 +5,57 @@ var Review = require('./review.model');
 var Game = require('../game/game.model');
 var filterable = require('./review.filterable');
 var filterHelper = require('../../components/filterHelper');
+var apiResponse = require('../../components/apiResponse');
+var querystring = require('querystring');
+var endpoint = '/api/reviews';
+
+var links = function(review) {
+  var self = endpoint + '/' + review._id,
+    author = self + '/author',
+    game = self + '/game';
+
+  return {
+    self: self,
+    author: author,
+    game: game
+  };
+}
 
 // Get list of reviews
 exports.index = function(req, res) {
   var paging = filterHelper.paging(req.query),
-    filters = filterHelper.mongoQuery(req.query, filterable);
+    query = filterHelper.mongoQuery(req.query, filterable),
+    path = req.originalUrl.split(/\?/)[0];
 
-  Review.find(filters).skip(paging.skip).limit(paging.limit).exec(function (err, reviews) {
+  Review.find(query).skip(paging.skip).limit(paging.limit).exec(function (err, reviews) {
     if(err) { return handleError(res, err); }
-    return res.json(200, reviews);
+
+    Review.count(query, function(err, count) {
+      var meta = {},
+        links = {
+          self: req.originalUrl
+        },
+        nextQuery,
+        prevQuery;
+
+      if (!err) {
+        meta.count = count;
+
+        if (count > paging.max) {
+          nextQuery = _.clone(req.query);
+          nextQuery.page = paging.next;
+          links.next = path + '?' + querystring.stringify(nextQuery);
+        }
+
+        if (paging.previous) {
+          prevQuery = _.clone(req.query);
+          prevQuery.page = paging.previous;
+          links.previous = path + '?' + querystring.stringify(prevQuery);
+        }
+      }
+
+      return res.json(200, apiResponse.collection(reviews, links, meta));
+    });
   });
 };
 
@@ -22,7 +64,7 @@ exports.show = function(req, res) {
   Review.findById(req.params.id, function (err, review) {
     if(err) { return handleError(res, err); }
     if(!review) { return res.send(404); }
-    return res.json(review);
+    return res.json(apiResponse.single(review, links(review)));
   });
 };
 
@@ -50,7 +92,7 @@ exports.create = function(req, res) {
 
     Review.create(body, function(err, review) {
       if(err) { return handleError(res, err); }
-      return res.json(201, review);
+      return res.json(201, apiResponse.single(review, links(review)));
     });
   });
 };
@@ -82,7 +124,7 @@ exports.update = function(req, res) {
       var updated = _.merge(review, body);
       updated.save(function (err) {
         if (err) { return handleError(res, err); }
-        return res.json(200, review);
+        return res.json(200, apiResponse.single(review, links(review)));
       });
     } else {
       return res.send(401);
