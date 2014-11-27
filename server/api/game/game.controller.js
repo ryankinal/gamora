@@ -4,15 +4,60 @@ var _ = require('lodash');
 var Game = require('./game.model');
 var filterable = require('./game.filterable');
 var filterHelper = require('../../components/filterHelper');
+var apiResponse = require('../../components/apiResponse');
+var endpoint = '/api/games';
+var querystring = require('querystring');
+
+var links = function(game) {
+  var self = endpoint + '/' + game._id,
+    tags = self + '/tags';
+
+  return {
+    self: self,
+    tags: tags
+  };
+}
 
 // Get list of games
 exports.index = function(req, res) {
   var query = filterHelper.mongoQuery(req.query, filterable),
-    paging = filterHelper.paging(req.query);
+    paging = filterHelper.paging(req.query),
+    path = req.originalUrl.split(/\?/)[0];
+
+  if (query && query.title) {
+    query.$or = [{title: query.title}, {aliases: query.title}];
+    delete query.title;
+  }
 
   Game.find(query).skip(paging.skip).limit(paging.limit).exec(function (err, games) {
     if(err) { return handleError(res, err); }
-    return res.json(200, games);
+
+    Game.count(query, function(err, count) {
+      var meta = {},
+        links = {
+          self: req.originalUrl
+        },
+        nextQuery,
+        prevQuery;
+
+      if (!err) {
+        meta.count = count;
+
+        if (count > paging.max) {
+          nextQuery = _.clone(req.query);
+          nextQuery.page = paging.next;
+          links.next = path + '?' + querystring.stringify(nextQuery);
+        }
+
+        if (paging.previous) {
+          prevQuery = _.clone(req.query);
+          prevQuery.page = paging.previous;
+          links.previous = path + '?' + querystring.stringify(prevQuery);
+        }
+      }
+
+      return res.json(200, apiResponse.collection(games, links, meta));
+    });
   });
 };
 
@@ -21,7 +66,7 @@ exports.show = function(req, res) {
   Game.findById(req.params.id, function (err, game) {
     if(err) { return handleError(res, err); }
     if(!game) { return res.send(404); }
-    return res.json(game);
+    return res.json(apiResponse.single(game, links(game)));
   });
 };
 
@@ -52,7 +97,7 @@ exports.create = function(req, res) {
 
   Game.create(body, function(err, game) {
     if(err) { return handleError(res, err); }
-    return res.json(201, game);
+    return res.json(201, apiResponse.single(game, links(game)));
   });
 };
 
@@ -85,7 +130,7 @@ exports.update = function(req, res) {
     var updated = _.merge(game, body);
     updated.save(function (err) {
       if (err) { return handleError(res, err); }
-      return res.json(200, game);
+      return res.json(200, apiResponse.single(game, links(game)));
     });
   });
 };
