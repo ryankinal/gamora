@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('gamoraApp')
-  .controller('GameCtrl', function ($scope, $stateParams, game, _) {
+  .controller('GameCtrl', function ($scope, $state, $stateParams, game, _) {
     var updateScope = function(response) {
       var descriptions = response.data.description,
         numDescriptions = descriptions.length;
@@ -27,8 +27,6 @@ angular.module('gamoraApp')
     }
 
     $scope.save = function() {
-      console.log($scope.game.data);
-
       game.save($scope.game.data).then(function(response) {
         $scope.$broadcast('game.save.succeeded', response);
       }, function(error) {
@@ -38,6 +36,7 @@ angular.module('gamoraApp')
 
     $scope.$on('game.save.succeeded', function(e, response) {
       updateScope(response);
+      $state.go('game.view', { id: response.data._id });
     });
 
     $scope.$on('game.save.failed', function(response) {

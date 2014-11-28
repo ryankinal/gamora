@@ -10,22 +10,22 @@ angular.module('gamoraApp')
       })
 
     $stateProvider
-      .state('game.view', {
-        url: '/{id}',
-        templateUrl: 'app/routes/game/game.html',
-        controller: 'GameCtrl',
-        params: {
-          id: ''
-        }
-      });
-
-    $stateProvider
       .state('game.add', {
         url: '/add',
         templateUrl: 'app/routes/game/edit.html',
         controller: 'GameCtrl',
         data: {
           authenticate: true
+        }
+      });
+
+    $stateProvider
+      .state('game.view', {
+        url: '/{id}',
+        templateUrl: 'app/routes/game/game.html',
+        controller: 'GameCtrl',
+        params: {
+          id: ''
         }
       });
 
