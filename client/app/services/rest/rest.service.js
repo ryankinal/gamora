@@ -15,16 +15,16 @@ angular.module('gamoraApp')
             return http(url, 'GET');
           }
         },
-        save: function(game) {
+        save: function(obj) {
           var url = endpoint,
             method = 'POST';
 
-          if (game._id) {
-            url += '/' + id;
+          if (obj._id) {
+            url += '/' + obj._id;
             method = 'PUT';
           }
 
-          return http(url, method, game);
+          return http(url, method, obj);
         },
         destroy: function(id) {
           if (!id) {
