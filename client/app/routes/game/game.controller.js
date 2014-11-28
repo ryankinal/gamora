@@ -37,6 +37,7 @@ angular.module('gamoraApp')
           aliases: []
         }
       };
+      $scope.gameSuggestions = [];
     }
 
     $scope.addTag = function(name) {
@@ -56,15 +57,28 @@ angular.module('gamoraApp')
       }
     }
 
+    $scope.getGameSuggestions = function(val) {
+      var url = '/api/games?title=*' + val;
+
+      return http(url, 'GET')
+        .then(function(games) {
+          $scope.gameSuggestions = games.data;
+          return games.data;
+        });
+    };
+
+    $scope.gameSuggestionClick = function(item, model, label) {
+      console.log(item, model, label, $scope.game.data.title);
+    };
+
     $scope.getTagSuggestions = function(val) {
       var url = '/api/tags?name=*' + val;
 
-      console.log(val);
-
-      return http(url, 'GET').then(function(tags) {
-        return tags.data;
-      });
-    }
+      return http(url, 'GET')
+        .then(function(tags) {
+          return tags.data;
+        });
+    };
 
     $scope.applyTag = function(tag) {
       var exists = _.some($scope.game.data.tags, function(t) {
@@ -78,7 +92,7 @@ angular.module('gamoraApp')
       } else {
         $scope.tag = tag.name;
       }
-    }
+    };
 
     $scope.removeTag = function(tag) {
       $scope.game.data.tags = _.filter($scope.game.data.tags, function(t) {
