@@ -80,6 +80,19 @@ angular.module('gamoraApp')
       }
     }
 
+    $scope.removeTag = function(tag) {
+      $scope.game.data.tags = _.filter($scope.game.data.tags, function(t) {
+        return t.tag !== tag._id;
+      });
+
+      $scope.tags = _.filter($scope.tags, function(t) {
+        return t._id !== tag._id;
+      });
+
+      console.log($scope.game.data.tags);
+      console.log($scope.tags);
+    }
+
     $scope.save = function() {
       game.save($scope.game.data).then(function(response) {
         $scope.$broadcast('game.save.succeeded', response);

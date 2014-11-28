@@ -29,7 +29,7 @@
         <ul ng-show="tags.length">
           <li class="tag" ng-repeat="tag in tags">
             <a ui-sref="tag.view({id: tag._id})" ng-bind="tag.name"></a>
-            <button ng-click="removeTag(tag._id)">remove</button>
+            <a ng-click="removeTag(tag)">remove</a>
           </li>
         </ul>
         <div class="lg-col-4">
