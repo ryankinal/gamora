@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
     ObjectId = Schema.Types.ObjectId;
 
 var TagSchema = new Schema({
-  name: String,
+  name: { type: String, index: { unique: true}, required: true, lowercase: true },
   canonical: ObjectId,
   description: [{
     text: String,
