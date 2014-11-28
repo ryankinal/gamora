@@ -11,7 +11,6 @@ angular.module('gamoraApp')
     };
 
     return function(url, method, data) {
-      console.log(url, method, data);
       var deferred = $q.defer(),
         options = {
           method: method
@@ -26,8 +25,6 @@ angular.module('gamoraApp')
           options.data = data;
         }
       }
-
-      console.log(options);
 
       $http(options).success(function(response) {
         deferred.resolve(response);
