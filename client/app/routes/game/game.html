@@ -2,5 +2,12 @@
   <div class="col-md-12">
     <h1 ng-show="game.data.title" ng-bind="game.data.title"></h1>
     <h1 ng-hide="game.data.title">Add a Game</h1>
+    <p><a ui-sref="game.edit({id: game.data._id})">Edit</a></p>
+    <dl>
+      <dt ng-show="game.data.publisher">Publisher</dt>
+      <dd ng-show="game.data.publisher" ng-bind="game.data.publisher"></dd>
+      <dt ng-show="game.data.description">Description</dt>
+      <dd ng-show="game.data.description" ng-bind="game.data.description"></dd>
+    </dl>
   </div>
 </div>
