@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="lg-col-12">
+    <h1 ng-show="game.data.title" ng-bind="game.data.title"></h1>
+    <h1 ng-hide="game.data.title">Add a Game</h1>
+    <form name="gameForm" ng-submit="save()">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" ng-model="game.data.title" name="title" required>
+      </div>
+
+      <div class="form-group">
+        <label>Also known as</label>
+        <input type="text" class="form-control" ng-model="aliases" ng-change="setAliases(aliases)" name="aliases">
+      </div>
+
+      <div class="form-group">
+        <label>Publisher</label>
+        <input type="text" class="form-control" ng-model="game.data.publisher" name="title" name="publisher">
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" ng-model="game.data.description" name="description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <input type="submit" class="btn btn-primary">
+      </div>
+    </form>
+  </div>
+</div>

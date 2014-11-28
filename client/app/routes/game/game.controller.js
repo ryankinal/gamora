@@ -1,26 +1,43 @@
 'use strict';
 
 angular.module('gamoraApp')
-  .controller('GameCtrl', function ($scope, $stateParams, game) {
-    console.log($stateParams.id);
+  .controller('GameCtrl', function ($scope, $stateParams, game, _) {
+    var updateScope = function(response) {
+      var descriptions = response.data.description,
+        numDescriptions = descriptions.length;
+
+      $scope.game = response;
+      $scope.descriptionHistory = descriptions;
+      $scope.game.data.description = descriptions[numDescriptions - 1].text;
+      $scope.description = {
+        text: descriptions[numDescriptions - 1].text + ''
+      };
+    }
 
     if ($stateParams.id) {
       $scope.loading = true;
       game
         .getById($stateParams.id)
         .then(function(response) {
-          $scope.game = response;
-          console.log(response);
+          updateScope(response);
           $scope.loading = false;
         }, function(error) {
           $scope.loading = false;
-          console.log(error);
         });
     }
 
-    $scope.$on('game.save.succeeded', function(response) {
-      $scope.gameId = response.data._id;
-      $scope.game = response;
+    $scope.save = function() {
+      console.log($scope.game.data);
+
+      game.save($scope.game.data).then(function(response) {
+        $scope.$broadcast('game.save.succeeded', response);
+      }, function(error) {
+        $scope.$broadcast('game.save.failed', error);
+      });
+    };
+
+    $scope.$on('game.save.succeeded', function(e, response) {
+      updateScope(response);
     });
 
     $scope.$on('game.save.failed', function(response) {

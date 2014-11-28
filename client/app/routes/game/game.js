@@ -23,7 +23,10 @@ angular.module('gamoraApp')
       .state('game.add', {
         url: '/add',
         templateUrl: 'app/routes/game/edit.html',
-        controller: 'GameCtrl'
+        controller: 'GameCtrl',
+        data: {
+          authenticate: true
+        }
       });
 
     $stateProvider
@@ -31,6 +34,7 @@ angular.module('gamoraApp')
         url: '/{id}/edit',
         templateUrl: 'app/routes/game/edit.html',
         controller: 'GameCtrl',
+        authenticate: true,
         params: {
           id: ''
         }
