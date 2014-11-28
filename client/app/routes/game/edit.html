@@ -20,7 +20,14 @@
 
       <div class="form-group">
         <label>Also known as</label>
-        <input type="text" class="form-control" ng-model="aliases" ng-change="setAliases(aliases)" name="aliases">
+        <ul ng-if="game.data.aliases.length">
+          <li ng-repeat="alias in game.data.aliases">
+            {{alias}}
+            <a ng-click="removeAlias(alias)">-</a>
+          </li>
+        </ul>
+        <input type="text" class="form-control" ng-model="alias" ng-change="setAliases(aliases)" name="aliases">
+        <a ng-click="addAlias(alias)">+</a>
       </div>
 
       <div class="form-group">

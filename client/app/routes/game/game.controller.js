@@ -67,9 +67,21 @@ angular.module('gamoraApp')
         });
     };
 
-    $scope.gameSuggestionClick = function(item, model, label) {
-      console.log(item, model, label, $scope.game.data.title);
-    };
+    $scope.addAlias = function(alias) {
+      var exists = _.some($scope.game.data.aliases, function(a) {
+        return a === alias;
+      });
+
+      if (!exists) {
+        $scope.game.data.aliases.push(alias);
+      }
+    }
+
+    $scope.removeAlias = function(alias) {
+      $scope.game.data.aliases = _.filter($scope.game.data.aliases, function(a) {
+        return a !== alias;
+      });
+    }
 
     $scope.getTagSuggestions = function(val) {
       var url = '/api/tags?name=*' + val;
@@ -102,9 +114,6 @@ angular.module('gamoraApp')
       $scope.tags = _.filter($scope.tags, function(t) {
         return t._id !== tag._id;
       });
-
-      console.log($scope.game.data.tags);
-      console.log($scope.tags);
     }
 
     $scope.save = function() {
@@ -114,6 +123,10 @@ angular.module('gamoraApp')
         $scope.$broadcast('game.save.failed', error);
       });
     };
+
+    $scope.$watch('game.data.aliases', function(aliases) {
+      $scope.aliasString = aliases.join(', ');
+    });
 
     $scope.$on('game.save.succeeded', function(e, response) {
       updateScope(response);
