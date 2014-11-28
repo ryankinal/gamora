@@ -148,6 +148,9 @@ exports.update = function(req, res) {
     game.tags = body.tags;
     delete body.tags;
 
+    game.aliases = body.aliases;
+    delete body.aliases;
+
     var updated = _.merge(game, body);
     updated.save(function (err) {
       if (err) { return handleError(res, err); }
