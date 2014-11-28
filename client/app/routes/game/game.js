@@ -3,6 +3,26 @@
 angular.module('gamoraApp')
   .config(function ($stateProvider) {
     $stateProvider
+      .state('games', {
+        url: '/games',
+        templateUrl: 'app/routes/game/list.html',
+        controller: 'GamesCtrl',
+        params: {
+          page: ''
+        }
+      });
+
+    $stateProvider
+      .state('games.page', {
+        url: '/{page}',
+        controller: 'GamesCtrl',
+        templateUrl: 'app/routes/game/list.html',
+        params: {
+          page: ''
+        }
+      });
+
+    $stateProvider
       .state('game', {
         url: '/game',
         template: '<div ui-view></div>',
@@ -14,9 +34,7 @@ angular.module('gamoraApp')
         url: '/add',
         templateUrl: 'app/routes/game/edit.html',
         controller: 'GameCtrl',
-        data: {
-          authenticate: true
-        }
+        authenticate: true
       });
 
     $stateProvider
