@@ -137,13 +137,16 @@ exports.update = function(req, res) {
 
     delete body.description;
 
-    if (typeof body.updates !== 'undefined') {
-      delete body.updates;
+    if (typeof body.updated !== 'undefined') {
+      delete body.updated;
     }
 
     game.updated.push({
       by: req.user._id
     });
+
+    game.tags = body.tags;
+    delete body.tags;
 
     var updated = _.merge(game, body);
     updated.save(function (err) {
