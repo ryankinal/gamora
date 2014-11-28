@@ -42,4 +42,21 @@ angular.module('gamoraApp')
     $scope.$on('game.save.failed', function(response) {
       $scope.error = true;
     });
+  })
+
+  .controller('GamesCtrl', function ($scope, $state, $stateParams, game, _, http) {
+    $scope.filters = {};
+
+    if ($stateParams.page) {
+      $scope.filters.page = parseInt($stateParams.page, 10);
+    } else {
+      $scope.filters.page = 1;
+    }
+
+    game.get($scope.filters)
+      .then(function(response) {
+        $scope.games = response;
+      }, function(error) {
+        $scope.error = true;
+      });
   });

@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="lg-col-12">
+    <ul>
+      <li ng-repeat="game in games.data">
+        <a ui-sref="game.view({id: game._id})" ng-bind="game.title"></a>
+      </li>
+    </ul>
+    <button ng-show="games.links.previous" class="btn btn-primary" ui-sref="games.page({page: filters.page - 1})">Previous</button>
+    <button ng-show="games.links.next" class="btn btn-primary" ui-sref="games.page({page: filters.page + 1})">Next</button>
+  </div>
+</div>
