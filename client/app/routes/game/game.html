@@ -6,8 +6,19 @@
     <dl>
       <dt ng-show="game.data.publisher">Publisher</dt>
       <dd ng-show="game.data.publisher" ng-bind="game.data.publisher"></dd>
+
       <dt ng-show="game.data.description">Description</dt>
       <dd ng-show="game.data.description" ng-bind="game.data.description"></dd>
+
+      <dt>Tags</dt>
+      <dd ng-show="game.data.tags.length">
+        <ul>
+          <li ng-repeat="tag in tags">
+            <a ui-sref="tag.view({id: tag._id})" ng-bind="tag.name"></a>
+          </li>
+        </ul>
+      </dd>
+      <dd ng-show="!game.data.tags.length">No tags</dd><dd>
     </dl>
   </div>
 </div>

@@ -24,6 +24,22 @@
       </div>
 
       <div class="form-group">
+        <label>Tags</label>
+        <div ng-show="!tags.length">No tags</div>
+        <ul ng-show="tags.length">
+          <li class="tag" ng-repeat="tag in tags">
+            <a ui-sref="tag.view({id: tag._id})" ng-bind="tag.name"></a>
+            <button ng-click="removeTag(tag._id)">remove</button>
+          </li>
+        </ul>
+        <div class="lg-col-4">
+          Add a tag:
+          <input type="text" class="form-control" typeahead="tag for tag in getTagSuggestions($viewValue)" typeahead-template-url="app/routes/game/tag-suggest.html" typeahead-min-length="2" typeahead-on-select="applyTag($item, $model, $label)" ng-model="tag" name="tag">
+          <a class="btn btn-secondary" ng-click="addTag(tag)">+</a>
+        </div>
+      </div>
+
+      <div class="form-group">
         <input type="submit" class="btn btn-primary">
       </div>
     </form>
