@@ -4,7 +4,7 @@ angular.module('gamoraApp')
   .factory('http', function ($http, $q, _) {
     var queryStringify = function(obj) {
       var pairs = [];
-      _.forEach(function(value, key) {
+      _.forEach(obj, function(value, key) {
         pairs.push(key + '=' + encodeURIComponent(value));
       });
       return pairs.join('&');
