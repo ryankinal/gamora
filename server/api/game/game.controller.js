@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Game = require('./game.model');
+var Tag = require('../tag/tag.model');
 var filterable = require('./game.filterable');
 var filterHelper = require('../../components/filterHelper');
 var apiResponse = require('../../components/apiResponse');
@@ -69,6 +70,23 @@ exports.show = function(req, res) {
     return res.json(apiResponse.single(game, links(game)));
   });
 };
+
+exports.tags = function(req, res) {
+  Game.findById(req.params.id, function (err, game) {
+    if(err) { return handleError(res, err); }
+    if (!game) { return res.send(404, { error: 'Game ' + req.params.id + ' not found'}); }
+
+    var tagIds = game.tags.map(function(def) {
+      return def.tag;
+    });
+
+    Tag.find({ _id: { $in: tagIds }}, function(err, tags) {
+      if (err) { return handleError(500, err); }
+
+      return res.json(apiResponse.collection(tags, { self: req.originalUrl }, { count: tags.length }));
+    });
+  });
+}
 
 // Creates a new game in the DB.
 exports.create = function(req, res) {
