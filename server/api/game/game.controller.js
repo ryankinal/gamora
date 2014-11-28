@@ -110,10 +110,10 @@ exports.update = function(req, res) {
 
     var body = _.clone(req.body);
 
-    if (typeof body.description === 'string') {
+    if (typeof body.description === 'string' && body.description !== game.description[game.description.length -1].text) {
       game.description.push({
         text: body.description,
-        by: req.user._id
+        user: req.user._id
       });
     }
 
