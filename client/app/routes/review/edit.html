@@ -30,13 +30,13 @@
       <div class="form-group" ng-if="game.data.completable">
         <label>Length</label>
         <div class="input-group">
-          <input class="form-control" type="text" min="0" name="days" ng-model="days" ng-change="setLength(days, hours, minutes)">
+          <input class="form-control" type="number" min="0" name="days" ng-model="processing.days">
           <label class="input-group-addon">hours</label>
 
-          <input class="form-control" type="text" min="0" name="hours" ng-model="hours" ng-change="setLength(days, hours, minutes)">
+          <input class="form-control" type="number" min="0" name="hours" ng-model="processing.hours">
           <label class="input-group-addon">hours</label>
 
-          <input class="form-control" type="text" min="0" name="minutes" ng-model="minutes" ng-change="setLength(days, hours, minutes)">
+          <input class="form-control" type="number" min="0" name="minutes" ng-model="processing.minutes">
           <label class="input-group-addon">minutes</label>
         </div>
       </div>
@@ -45,10 +45,10 @@
         <label>Average Session Time: {{review.data.length}}</label>
         <div class="input-group">
           <label class="input-group-addon">hours</label>
-          <input class="form-control" type="text" min="0" name="hours" ng-model="hours" ng-change="setLength()">
+          <input type="number" class="form-control" type="text" name="hours" ng-model="processing.hours">
 
           <label class="input-group-addon">minutes</label>
-          <input class="form-control" type="text" min="0" name="minutes" ng-model="minutes" ng-change="setLength()">
+          <input type="number" class="form-control" name="minutes" ng-model="processing.minutes">
         </div>
       </div>
 

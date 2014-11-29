@@ -16,7 +16,6 @@ angular.module('gamoraApp')
       .state('review.add', {
         url: '/add',
         templateUrl: 'app/routes/review/edit.html',
-        controller: 'ReviewCtrl',
         authenticate: true
       });
 
@@ -24,7 +23,6 @@ angular.module('gamoraApp')
       .state('review.view', {
         url: '/{id}',
         templateUrl: 'app/routes/review/review.html',
-        controller: 'ReviewCtrl',
         params: {
           id: ''
         }
@@ -34,7 +32,7 @@ angular.module('gamoraApp')
       .state('review.edit', {
         url: '/{id}/edit',
         templateUrl: 'app/routes/review/edit.html',
-        controller: 'ReviewCtrl',
+        authenticate: true,
         params: {
           id: ''
         }
