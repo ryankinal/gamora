@@ -58,13 +58,15 @@ angular.module('gamoraApp')
     }
 
     $scope.getGameSuggestions = function(val) {
-      var url = '/api/games?title=*' + val;
+      if (val && val.replace(/(^\s+|\s+$)/g, '') !== '') {
+        var url = '/api/games?title=*' + val;
 
-      return http(url, 'GET')
-        .then(function(games) {
-          $scope.gameSuggestions = games.data;
-          return games.data;
-        });
+        return http(url, 'GET')
+          .then(function(games) {
+            $scope.gameSuggestions = games.data;
+            return games.data;
+          });
+      }
     };
 
     $scope.addAlias = function(alias) {
