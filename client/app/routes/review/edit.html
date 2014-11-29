@@ -1,0 +1,73 @@
+<div class="container">
+  <div class="lg-col-12">
+    <h1 ng-show="review.data.title" ng-bind="review.data.title"></h1>
+    <h1 ng-show="!review.data.title">Reviewing {{game.data.title}}</h1>
+
+    <form ng-submit="save()">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" ng-model="review.data.title" name="title">
+      </div>
+
+      <div class="form-group">
+        <label>Rating</label>
+        <div rating ng-model="review.data.rating" max="5" name="rating"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Difficulty</label>
+        <div>
+          <select class="form-control" ng-model="review.data.difficulty">
+            <option value="1">Really Easy</option>
+            <option value="2">Easy</option>
+            <option value="3">Challenging</option>
+            <option value="4">Hard</option>
+            <option value="5">Nightmarish</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" ng-if="game.data.completable">
+        <label>Length</label>
+        <div class="input-group">
+          <input class="form-control" type="text" min="0" name="days" ng-model="days" ng-change="setLength(days, hours, minutes)">
+          <label class="input-group-addon">hours</label>
+
+          <input class="form-control" type="text" min="0" name="hours" ng-model="hours" ng-change="setLength(days, hours, minutes)">
+          <label class="input-group-addon">hours</label>
+
+          <input class="form-control" type="text" min="0" name="minutes" ng-model="minutes" ng-change="setLength(days, hours, minutes)">
+          <label class="input-group-addon">minutes</label>
+        </div>
+      </div>
+
+      <div class="form-group" ng-if="!game.data.completable">
+        <label>Average Session Time: {{review.data.length}}</label>
+        <div class="input-group">
+          <label class="input-group-addon">hours</label>
+          <input class="form-control" type="text" min="0" name="hours" ng-model="hours" ng-change="setLength()">
+
+          <label class="input-group-addon">minutes</label>
+          <input class="form-control" type="text" min="0" name="minutes" ng-model="minutes" ng-change="setLength()">
+        </div>
+      </div>
+
+      <div class="form-group" ng-if="game.data.completable">
+        <label>Completed</label>
+        <div>
+          <input type="radio" name="completed" class="radio" ng-model="completed" value="0"> No
+          <input type="radio" name="completed" class="radio" ng-model="completed" value="1"> Yes
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Review</label>
+        <textarea name="review" ng-model="review.data.description" class="form-control"></textarea>
+      </div>
+
+      <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Complete">
+      </div>
+    </form>
+  </div>
+</div>
