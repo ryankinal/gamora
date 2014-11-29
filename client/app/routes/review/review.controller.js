@@ -1,7 +1,17 @@
 'use strict';
 
 angular.module('gamoraApp')
-  .controller('ReviewCtrl', function ($scope, $state, $stateParams, $location, $q, review, game, http) {
+  .controller('ReviewCtrl', function ($scope, $state, $stateParams, $location, $q, review, game, http, difficultyLevels) {
+    var calculateTime = function() {
+      var remaining = $scope.review.data.length;
+
+      $scope.processing.days = Math.floor(remaining / (24 * 60));
+      remaining -= $scope.processing.days * 24 * 60;
+
+      $scope.processing.hours = Math.floor(remaining / 60);
+      $scope.processing.minutes = remaining - $scope.processing.hours * 60;
+    };
+
     $scope.loading = false;
     $scope.review = {
       data: {
@@ -16,6 +26,8 @@ angular.module('gamoraApp')
       completed: 0
     };
 
+    $scope.difficultyLevels = difficultyLevels;
+
     if ($stateParams.id) {
       $scope.loading = true;
 
@@ -25,16 +37,9 @@ angular.module('gamoraApp')
           $scope.loading = false;
 
           if (review.data.length) {
-            var remaining = review.data.length;
-
-            $scope.processing.days = Math.floor(remaining / (24 * 60));
-            remaining -= $scope.days * 24 * 60;
-
-            $scope.processing.hours = Math.floor(remaining / 60);
-            $scope.processing.minutes = remaining - $scope.hours * 60;
+            calculateTime();
+            console.log($scope.processing);
           }
-
-          console.log(review.links.game);
 
           http(review.links.game, 'GET')
             .then(function(game) {
@@ -69,6 +74,26 @@ angular.module('gamoraApp')
         }, function(error) {
           $scope.$broadcast('review.save.failed', error);
         });
+    };
+
+    $scope.lengthString = function() {
+      var parts = [];
+
+      if ($scope.processing.days) {
+        parts.push($scope.processing.days + ' days');
+      }
+
+      if ($scope.processing.hours || ($scope.processing.days && $scope.processing.minutes)) {
+        parts.push($scope.processing.hours  + ' hours');
+      }
+
+      if ($scope.processing.minutes) {
+        parts.push($scope.processing.minutes + ' hours');
+      }
+
+      console.log(parts);
+
+      return parts.join(' ');
     };
 
     $scope.$on('review.save.succeeded', function(e, review) {

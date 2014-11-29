@@ -1,3 +1,33 @@
-<div class="col-md-12">
-This is the review view.
+<div class="container">
+  <div class="col-lg-12">
+    <div ng-show="review.data.title">
+      <h1 ng-bind="review.data.title"></h1>
+      <p>A review of {{game.data.title}}</p>
+    </div>
+    <div ng-show="!review.data.title">
+      <h1>Review of {{game.data.title}}</h1>
+    </div>
+
+    <p ng-show="game.data.completable && review.data.completed == 1">
+      Completed <span ng-show="review.data.length">in {{lengthString}}.</span>
+    </p>
+
+    <p ng-show="game.data.completable && review.data.completed == 1">
+      <span ng-show="review.data.length">Spent {{lengthString()}};</span> Not yet complete.
+    </p>
+
+    <p ng-show="!game.data.completable && review.data.length">
+      Average time spent per session: {{lengthString()}}
+    </p>
+
+    <dl>
+      <dt>Overall Rating</dt>
+      <dd><span rating ng-model="review.data.rating" readonly="true"></span></dd>
+
+      <dt>Difficulty</dt>
+      <dd>{{difficultyLevels[review.data.difficulty]}}</dd>
+    </dl>
+
+    <p ng-bind="description"></p>
+  </div>
 </div>
