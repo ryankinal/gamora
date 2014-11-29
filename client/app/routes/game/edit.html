@@ -41,6 +41,12 @@
       </div>
 
       <div class="form-group">
+        <label>Completable?</label>
+        <input type="radio" value="1" ng-model="game.data.completable"> Yes
+        <input type="radio" value="0" ng-model="game.data.completable"> No
+      </div>
+
+      <div class="form-group">
         <label>Tags</label>
         <div ng-show="!tags.length">No tags</div>
         <ul ng-show="tags.length">
