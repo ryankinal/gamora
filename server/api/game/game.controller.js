@@ -8,16 +8,8 @@ var filterHelper = require('../../components/filterHelper');
 var apiResponse = require('../../components/apiResponse');
 var endpoint = '/api/games';
 var querystring = require('querystring');
-
-var links = function(game) {
-  var self = endpoint + '/' + game._id,
-    tags = self + '/tags';
-
-  return {
-    self: self,
-    tags: tags
-  };
-}
+var apiLinks = require('../../components/apiLinks');
+var links = apiLinks.game;
 
 // Get list of games
 exports.index = function(req, res) {

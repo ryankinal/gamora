@@ -7,20 +7,8 @@ var filterHelper = require('../../components/filterHelper');
 var apiResponse = require('../../components/apiResponse');
 var querystring = require('querystring');
 var endpoint = '/api/tags';
-
-var links = function(tag) {
-  var self = endpoint + '/' + tag._id,
-    canonical = endpoint + '/' + tag.canonical,
-    obj = {
-      self: self
-    };
-
-  if (tag.canonical) {
-    obj.canonical = canonical;
-  }
-
-  return obj;
-};
+var apiLinks = require('../../components/apiLinks');
+var links = apiLinks.tag;
 
 // Get list of tags
 exports.index = function(req, res) {
