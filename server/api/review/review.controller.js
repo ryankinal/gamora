@@ -8,18 +8,8 @@ var filterHelper = require('../../components/filterHelper');
 var apiResponse = require('../../components/apiResponse');
 var querystring = require('querystring');
 var endpoint = '/api/reviews';
-
-var links = function(review) {
-  var self = endpoint + '/' + review._id,
-    author = self + '/author',
-    game = self + '/game';
-
-  return {
-    self: self,
-    author: author,
-    game: game
-  };
-}
+var apiLinks = require('../../components/apiLinks');
+var links = apiLinks.review;
 
 // Get list of reviews
 exports.index = function(req, res) {
@@ -67,6 +57,19 @@ exports.show = function(req, res) {
     return res.json(apiResponse.single(review, links(review)));
   });
 };
+
+exports.game = function(req, res) {
+  Review.findById(req.params.id, function(err, review) {
+    if(err) { return handleError(res, err); }
+    if(!review) { return res.send(404, {error: 'Review ' + req.params.id + 'not found'}); }
+
+    Game.findById(review.game, function(err, game) {
+      if(err) { return handleError(res, err); }
+      if(!game) { return res.send(404, {error: 'Game ' + review.game + ' not found'}); }
+      return res.json(apiResponse.single(game, apiLinks.game(game)));
+    });
+  });
+}
 
 // Creates a new review in the DB.
 exports.create = function(req, res) {
