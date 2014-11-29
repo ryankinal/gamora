@@ -68,12 +68,14 @@ angular.module('gamoraApp')
     };
 
     $scope.addAlias = function(alias) {
-      var exists = _.some($scope.game.data.aliases, function(a) {
-        return a === alias;
-      });
+      if (alias && alias.replace(/(^\s+|\s+$)/g, '')) {
+        var exists = _.some($scope.game.data.aliases, function(a) {
+          return a === alias;
+        });
 
-      if (!exists) {
-        $scope.game.data.aliases.push(alias);
+        if (!exists) {
+          $scope.game.data.aliases.push(alias);
+        }
       }
     }
 
@@ -93,16 +95,18 @@ angular.module('gamoraApp')
     };
 
     $scope.applyTag = function(tag) {
-      var exists = _.some($scope.game.data.tags, function(t) {
-        return t.tag === tag._id;
-      })
+      if (tag.name && tag.name.replace(/(^\s+|\s+$)/g, '')) {
+        var exists = _.some($scope.game.data.tags, function(t) {
+          return t.tag === tag._id;
+        })
 
-      if (!exists) {
-        $scope.tags.push(tag);
-        $scope.game.data.tags.push({ tag: tag._id });
-        $scope.tag = '';
-      } else {
-        $scope.tag = tag.name;
+        if (!exists) {
+          $scope.tags.push(tag);
+          $scope.game.data.tags.push({ tag: tag._id });
+          $scope.tag = '';
+        } else {
+          $scope.tag = tag.name;
+        }
       }
     };
 
