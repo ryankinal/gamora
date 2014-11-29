@@ -15,6 +15,7 @@ var GameSchema = new Schema({
   }],
   rating: { type: Number, min: 1, max: 5 },
   difficulty: { type: Number, min: 1, max: 5 },
+  completable: { type: Boolean, default: false },
   tags: [{
     tag: ObjectId,
     added: { type: Date, default: Date.now },
